@@ -3,18 +3,17 @@ import { ChangeEvent, FormEvent, useState, useEffect, useRef } from 'react';
 
 function App() {
   const [name, setName] = useState<string>("");
-  const inputRef = useRef<HTMLInputElement>(null);
+  const prevStateValue = useRef<string>("");
 
-  const focus = () => {
-    inputRef.current?.focus()
-  }
+  useEffect(() => {
+    prevStateValue.current = name;
+  }, [name])
 
   return (
     <div className="app">
       <header className="App-header">
-        <input ref={inputRef} value={name} onChange={e => setName(e.target.value)}/>
-        <div>Hi, my name is {name}</div>
-        <button onClick={focus}>Focus</button>
+        <input value={name} onChange={e => setName(e.target.value)}/>
+        <div>Hi, my name is {name}, and it used to be {prevStateValue.current}</div>
       </header>
     </div>
   )
