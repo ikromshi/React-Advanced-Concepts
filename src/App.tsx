@@ -1,27 +1,48 @@
-import React, { Fragment, ReactElement } from 'react';
-import { isPropertySignature } from 'typescript';
 import './App.css';
-
-type Prop = {
-  greeting: string;
-}
-
-const Temp: React.FC<Prop> = (prop): JSX.Element => {
-  return (
-    <Fragment>
-      {
-        prop.greeting === "hi" ?
-        `The passed message says hi: ${prop.greeting}` :
-        <Fragment>The message was {prop.greeting}</Fragment>
-      }
-    </Fragment>
-  )
-}
+import { ChangeEvent, FormEvent, useState } from 'react';
 
 function App() {
+  const [firstName, setFirstName] = useState<HTMLInputElement | null>(null);
+  const [lastName, setLastName] = useState<HTMLInputElement | null>(null);
+  const [age, setAge] = useState<HTMLInputElement | null>(null);
+
+  const handleClick = () => {
+    console.log(firstName?.value);
+  }
+
+  const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      lastName?.focus();
+    }
+  }
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const {value} = event.target;
+    console.log(value);
+  }
+
   return (
     <div className="App">
-      <Temp greeting="hi"/>
+      <div>
+        <span>First name: </span>  
+        <input 
+          ref={(input) => {setFirstName(input)}} 
+          onKeyUp={handleKeyUp}
+          type="text" 
+        />
+      </div>
+      <div>
+        <span>Last name: </span>  
+        <input ref={(input) => {setLastName(input)}} type="text" onChange={handleChange}
+/>
+      </div>
+      <div>
+        <span>Age name: </span>  
+        <input ref={(input) => {setAge(input)}} type="text" />
+      </div>
+      <div>
+        <button type='submit' onClick={() => {handleClick()}}>Submit</button>
+      </div>
     </div>
   );
 }
@@ -29,12 +50,6 @@ function App() {
 export default App;
 
 /**
- * Fragment use cases:
- *    A wrapper for multiple child elements;
- *    Good replacement for a div that's not going to be rendered
- *    Can replace string interpolation
- * 
- * Fragment replacements:
- *    [ child1, child2... ] => Cannot pass props
- *    <> child1, child2... </> => Cannot pass props
+ * React ref use cases:
+ *    To access dom elements
  */
