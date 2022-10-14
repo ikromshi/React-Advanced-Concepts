@@ -1,55 +1,31 @@
 import './App.css';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState, useEffect, useRef } from 'react';
 
 function App() {
-  const [firstName, setFirstName] = useState<HTMLInputElement | null>(null);
-  const [lastName, setLastName] = useState<HTMLInputElement | null>(null);
-  const [age, setAge] = useState<HTMLInputElement | null>(null);
+  const [name, setName] = useState<string>("");
+  const renderCount = useRef<number>(1);
 
-  const handleClick = () => {
-    console.log(firstName?.value);
-  }
-
-  const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      lastName?.focus();
-    }
-  }
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const {value} = event.target;
-    console.log(value);
-  }
+  useEffect(() => {
+    renderCount.current = renderCount.current + 1;
+  })
 
   return (
-    <div className="App">
-      <div>
-        <span>First name: </span>  
-        <input 
-          ref={(input) => {setFirstName(input)}} 
-          onKeyUp={handleKeyUp}
-          type="text" 
-        />
-      </div>
-      <div>
-        <span>Last name: </span>  
-        <input ref={(input) => {setLastName(input)}} type="text" onChange={handleChange}
-/>
-      </div>
-      <div>
-        <span>Age name: </span>  
-        <input ref={(input) => {setAge(input)}} type="text" />
-      </div>
-      <div>
-        <button type='submit' onClick={() => {handleClick()}}>Submit</button>
-      </div>
+    <div className="app">
+      <header className="App-header">
+        <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="re-render the app"/>
+        <div>Hi, my name is {name}</div>
+        <div>I rendered {renderCount.current} times</div>
+      </header>
     </div>
-  );
+  )
 }
 
 export default App;
 
 /**
- * React ref use cases:
- *    To access dom elements
+ * A ref is similar to state in that it persists through renders
+ * A ref doesn't cause a component to re-update when it gets changed
+ * 
+ * Use Cases: 
+ *    To store a previous value in it that persists through rerenders and doesn't cause rerenders
  */
