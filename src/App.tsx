@@ -3,18 +3,18 @@ import { ChangeEvent, FormEvent, useState, useEffect, useRef } from 'react';
 
 function App() {
   const [name, setName] = useState<string>("");
-  const renderCount = useRef<number>(1);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    renderCount.current = renderCount.current + 1;
-  })
+  const focus = () => {
+    inputRef.current?.focus()
+  }
 
   return (
     <div className="app">
       <header className="App-header">
-        <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="re-render the app"/>
+        <input ref={inputRef} value={name} onChange={e => setName(e.target.value)}/>
         <div>Hi, my name is {name}</div>
-        <div>I rendered {renderCount.current} times</div>
+        <button onClick={focus}>Focus</button>
       </header>
     </div>
   )
@@ -28,4 +28,5 @@ export default App;
  * 
  * Use Cases: 
  *    To store a previous value in it that persists through rerenders and doesn't cause rerenders
+ *    ref attribute sets the "current" property of object from useRef to the DOM element it's in, so we can focus on it by doing inputRef.current.focus()
  */
