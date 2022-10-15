@@ -1,31 +1,54 @@
 import './App.css';
-import { ChangeEvent, FormEvent, useState, useEffect, useRef } from 'react';
+import { ChangeEvent, FormEvent, useState, useEffect, useRef, useMemo } from 'react';
 
 function App() {
-  const [name, setName] = useState<string>("");
-  const prevStateValue = useRef<string>("");
+  const [number, setNumber] = useState(0);
+  const [dark, setDark] = useState(false);
+
+  const doubleNumber = useMemo(() => {
+    return slowFunction(number)
+  }, [number])
+
+  const themeStyles = useMemo(() => {
+    return {
+      backgroundColor: dark ? "black" : "white",
+      color: dark ? "white" : "black"
+    }
+  }, [dark]);
+
+  // const themeStyles = {
+  //   backgroundColor: dark ? "black" : "white",
+  //   color: dark ? "white" : "black"
+  // }
 
   useEffect(() => {
-    prevStateValue.current = name;
-  }, [name])
+    console.log("Theme changed");
+  }, [themeStyles]);
+
 
   return (
     <div className="app">
-      <header className="App-header">
-        <input value={name} onChange={e => setName(e.target.value)}/>
-        <div>Hi, my name is {name}, and it used to be {prevStateValue.current}</div>
-      </header>
+      {/* <header className="App-header"> */}
+        <input type="text" value={number} onChange={e => setNumber(parseInt(e.target.value))} />
+        <button onClick={() => setDark(prevDark => !prevDark)}>Change theme</button>
+        <div style={themeStyles}>{doubleNumber}</div>
+      {/* </header> */}
     </div>
   )
+}
+
+function slowFunction(number: number) {
+  console.log("Calling a slow function");
+  for (let i=0; i<1000000000; i++) {};
+  return number*2;
 }
 
 export default App;
 
 /**
- * A ref is similar to state in that it persists through renders
- * A ref doesn't cause a component to re-update when it gets changed
+ * useMemo() memoizes the previous input and output and returns the memoized output if the input is the same
  * 
- * Use Cases: 
- *    To store a previous value in it that persists through rerenders and doesn't cause rerenders
- *    ref attribute sets the "current" property of object from useRef to the DOM element it's in, so we can focus on it by doing inputRef.current.focus()
+ * when the dependecy array of useEffect has an object, every time a component renders, the reference to the
+ * object renews, so useEffect runs even though the object's properties haven't changed. Leverage useMemo for
+ * the object's assigment in this case
  */
