@@ -9,6 +9,7 @@ const api = axios.create({
 type Posts = {
   title: string;
   body: string;
+  id: number;
 }[];
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
     getPosts();
   }, []);
 
+  // Getting data
   const getPosts = async () => {
     const data = await api.get("/").then(res => {
       return res.data;
@@ -34,13 +36,23 @@ function App() {
     getPosts();
   };
   
+  //Deleting data
+  const deletePosts = async (id: number) => {
+    const response = api.delete(`/${id}`);
+    getPosts();
+  }
   
   return (
     <div className="app">
       <header className="App-header">
       <button onClick={createPosts}>Add a post</button>
       <button onClick={getPosts}>Get Posts</button>
-      {posts?.map((post, idx) => <h3 key={idx}>Title: {post.title} </h3>)}
+      {posts?.map((post, idx) => (
+        <div key={idx}>
+          <h3> Title: {post.title} </h3> 
+          <button onClick={() => deletePosts(post.id)}>X</button>
+        </div>
+      ))}
       </header>
     </div>
   )
