@@ -41,7 +41,7 @@ function App() {
   
   //Deleting data
   const deletePosts = async (id: number) => {
-    const response = api.delete(`/${id}`);
+    const response = await api.delete(`/${id}`);
     getPosts();
   }
   
