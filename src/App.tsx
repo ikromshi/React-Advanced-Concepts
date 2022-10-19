@@ -3,8 +3,11 @@ import { useEffect, useMemo, useState } from 'react';
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3500/posts"
-})
+  baseURL: "http://localhost:3500/posts", 
+  params: {
+    _limit: 3
+  }
+}, )
 
 type Posts = {
   title: string;
@@ -42,6 +45,12 @@ function App() {
     getPosts();
   }
   
+  // Updating data
+  const updatePosts = async (id: number, val: string) => {
+    const response = await api.patch(`/${id}`, {title: val});
+    getPosts();
+  }
+
   return (
     <div className="app">
       <header className="App-header">
@@ -49,7 +58,7 @@ function App() {
       <button onClick={getPosts}>Get Posts</button>
       {posts?.map((post, idx) => (
         <div key={idx}>
-          <h3> Title: {post.title} </h3> 
+          <h3 onClick={() => updatePosts(post.id, `${post.title} updated`)}> Title: {post.title} </h3> 
           <button onClick={() => deletePosts(post.id)}>X</button>
         </div>
       ))}
